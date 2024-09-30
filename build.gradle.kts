@@ -1,6 +1,8 @@
 val kotlin_version: String by project
 val logback_version: String by project
 val exposedVersion: String by project
+val ktor_version: String by project
+val swagger_codegen_version: String by project
 
 plugins {
     kotlin("jvm") version "2.0.20"
@@ -35,5 +37,8 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("com.h2database:h2:1.4.199")
+    implementation("com.h2database:h2:2.2.220")
+    implementation("io.ktor:ktor-server-swagger:$ktor_version")
+    implementation("io.swagger.codegen.v3:swagger-codegen-generators:$swagger_codegen_version")
+
 }

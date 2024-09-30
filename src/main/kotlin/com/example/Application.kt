@@ -13,5 +13,4 @@ fun Application.module() {
     initDB()
     configureSerialization()
     configureRouting()
-
 }

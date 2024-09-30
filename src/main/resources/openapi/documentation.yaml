@@ -1,0 +1,169 @@
+openapi: "3.0.3"
+info:
+  title: "JSON API sample"
+  description: "A JSON API that store articles"
+  version: "1.0.0"
+servers:
+  - url: "http://0.0.0.0:8080"
+paths:
+  /article:
+    get:
+      tags:
+        - "Articles"
+      description: "Returns All Articles "
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Article"
+    post:
+      tags:
+        - "Articles"
+      description: "Creates a new Article"
+      requestBody:
+        description: "A JSON object containing user information"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Article"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Article stored correctly"
+  /article/{id}:
+    get:
+      tags:
+        - "Articles"
+      description: "Returns a Article by ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Article"
+
+    delete:
+      tags:
+        - "Articles"
+      description: "Delete a Article by ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Article"
+
+
+  /user:
+    get:
+      tags:
+        - "Users"
+      description: "Returns All users "
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
+    post:
+      tags:
+        - "Users"
+      description: "Creates a new user"
+      requestBody:
+        description: "A JSON object containing user information"
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: "Created"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "User stored correctly"
+
+  /user/{id}:
+    get:
+      tags:
+        - "Users"
+      description: "Returns a user by its ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
+
+    delete:
+      tags:
+        - "Users"
+      description: "Delete a user by ID"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
+components:
+  schemas:
+    Article:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        title:
+          type: "string"
+        body:
+          type: "string"
+        author:
+          type: "string"
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"

@@ -7,10 +7,8 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.UUID
 
@@ -18,7 +16,7 @@ fun Route.userRouting() {
     route("/user") {
         get {
             val users = transaction {
-                Users.selectAll().map { Users.toUser(it) }
+                Users.selectAll().map { Users.toUser(it)  }
             }
 
             return@get call.respond(users)
@@ -30,7 +28,7 @@ fun Route.userRouting() {
                 status = HttpStatusCode.NotFound
             )
             val user = transaction {
-                Users.select { Users.id eq id }.map { Users.toUser(it) }
+                Users.selectAll().where { Users.id eq UUID.fromString(id) }.map { Users.toUser(it) }
             }
 
             if (user.isNotEmpty()) {
@@ -41,10 +39,8 @@ fun Route.userRouting() {
 
         post {
             val user = call.receive<User>()
-            user.id = UUID.randomUUID().toString()
-            transaction {
+             transaction {
                 Users.insert {
-                    it[id] = user.id!!
                     it[name] = user.name
                 }
             }
@@ -59,7 +55,7 @@ fun Route.userRouting() {
 
 
             val delete = transaction {
-                Users.deleteWhere { Users.id eq id }
+                Users.deleteWhere { Users.id eq UUID.fromString(id) }
             }
 
             if (delete == 1) {

@@ -2,17 +2,13 @@ package com.example.routes
 
 import com.example.model.Article
 import com.example.model.Articles
-import com.example.model.Users.name
-import io.ktor.http.*
+import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.util.*
 import kotlin.text.get
@@ -33,7 +29,7 @@ fun Route.articleRouting() {
             )
 
             val article: List<Article> =
-                transaction { Articles.select { Articles.id eq id }.map { Articles.toArticle(it) } }
+                transaction { Articles.selectAll().where { Articles.id eq id.toInt() }.map { Articles.toArticle(it) } }
 
             if (article.isNotEmpty()) {
                 return@get call.respond(article.first())
@@ -44,12 +40,11 @@ fun Route.articleRouting() {
         post {
             val article = call.receive<Article>()
 
-            article.id = UUID.randomUUID().toString()
-
             transaction {
                 Articles.insert {
-                    it[id] = article.id!!
                     it[title] = article.title
+                    it[body] = article.body
+                    it[author] = UUID.fromString(article.author)
                 }
             }
 
@@ -63,7 +58,7 @@ fun Route.articleRouting() {
             )
 
             val delete: Int = transaction {
-                Articles.deleteWhere { Articles.id eq id }
+                Articles.deleteWhere { Articles.id eq id.toInt() }
             }
 
             if (delete == 1) {
