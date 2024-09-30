@@ -1,6 +1,8 @@
 package com.example
 
 import com.example.plugins.*
+import com.example.routes.registerArticleRoutes
+import com.example.routes.registerUserRoutes
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -8,6 +10,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    initDB()
     configureSerialization()
     configureRouting()
+
 }
